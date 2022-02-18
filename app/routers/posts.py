@@ -1,3 +1,4 @@
+from typing import Optional
 from email.policy import HTTP
 from fastapi import Response, status, HTTPException, Depends, APIRouter
 from sqlalchemy import func
@@ -12,7 +13,7 @@ router = APIRouter(prefix='/posts', tags=['posts'])
 @router.get('/', response_model=List[schemas.PostOut])
 def get_posts(db: Session = Depends(get_db),
               current_user: models.User = Depends(oath2.get_current_user),
-              limit: int = 10, skip: int = 0, search: str | None = ""):
+              limit: int = 10, skip: int = 0, search: Optional[str] = ""):
     
     posts = (db.query(models.Post,
                       func.count(models.Vote.post_id).label('votes'))
